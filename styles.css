@@ -137,21 +137,22 @@ img {
   text-align: center;
 }
 
-/* Animación pedida: se mueve hacia la derecha y vuelve suavemente */
+/* Animación pedida: se mueve hacia la derecha y vuelve suavemente sin cortar texto */
 @keyframes promo-slide-right-back {
   0% {
-    transform: translateX(-36px);
+    transform: translateX(-16px);
   }
   50% {
-    transform: translateX(48px);
+    transform: translateX(22px);
   }
   100% {
-    transform: translateX(-36px);
+    transform: translateX(-16px);
   }
 }
 
 .promo-topbar__marquee {
-  animation: promo-slide-right-back 6.5s ease-in-out infinite;
+  padding-inline: 1.5rem;
+  animation: promo-slide-right-back 5.5s ease-in-out infinite;
   will-change: transform;
 }
 
