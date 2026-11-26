@@ -1,26 +1,36 @@
 /**
- * PIXER Producciones (Córdoba) — Lógica de Sub-Módulos por Categoría y Conversión
- * Implementa patrones nativos recomendados por modern-web-guidance (tabs, html, performance)
+ * PIXER Producciones (Córdoba) — Lógica de Módulos, Mini Cuadradito Pre-WhatsApp y Google Ads Routing
  */
 
 const PIXER_CONFIG = {
-  // Número de WhatsApp configurable del estudio (formato internacional sin +)
-  whatsappNumber: '5493510000000',
-  // Configuración rápida de Barra Superior Promocional (Estilo Black Friday / Medios de Pago)
-  promoBarEnabled: true
+  whatsappNumber: '5493510000000'
 };
 
 function buildWhatsAppUrl(message) {
-  const encoded = encodeURIComponent(message);
+  const encoded = encodeURIComponent(message.trim());
   return `https://wa.me/${PIXER_CONFIG.whatsappNumber}?text=${encoded}`;
 }
 
 /* ==========================================================================
-   1. SISTEMA DE SUB-MÓDULOS POR CATEGORÍA (TABS + CUADRADITOS + UNTIL-FOUND)
+   1. SISTEMA DE SUB-MÓDULOS POR CATEGORÍA + ROUTING PARA GOOGLE ADS
    ========================================================================== */
 const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
 const panels = Array.from(document.querySelectorAll('[role="tabpanel"]'));
 const categorySquares = Array.from(document.querySelectorAll('.category-square'));
+const waCustomInput = document.getElementById('wa-custom-input');
+const waPanel = document.getElementById('wa-interactive-panel');
+const waFabToggle = document.getElementById('wa-fab-toggle');
+
+function setWaPresetMessage(text, { openCard = false } = {}) {
+  if (waCustomInput && text) {
+    waCustomInput.value = text;
+  }
+  if (openCard && waPanel && waFabToggle) {
+    waPanel.hidden = false;
+    waFabToggle.setAttribute('aria-expanded', 'true');
+    waCustomInput?.focus();
+  }
+}
 
 function selectCategoryTab(targetTab, { scrollToModule = false, moveFocus = false } = {}) {
   if (!targetTab) return;
@@ -47,6 +57,11 @@ function selectCategoryTab(targetTab, { scrollToModule = false, moveFocus = fals
     sq.classList.toggle('is-active', sq.dataset.targetTab === targetTab.id);
   }
 
+  // Actualizar el mensaje del mini cuadradito pre-WhatsApp según la categoría activa
+  if (targetTab.dataset.waText) {
+    setWaPresetMessage(targetTab.dataset.waText);
+  }
+
   try {
     targetTab.scrollIntoView({ block: 'nearest', inline: 'nearest', container: 'nearest' });
   } catch {
@@ -63,13 +78,11 @@ function selectCategoryTab(targetTab, { scrollToModule = false, moveFocus = fals
   }
 }
 
-// Eventos en pestañas del tablist
 for (const tab of tabs) {
   tab.addEventListener('click', () => {
     selectCategoryTab(tab);
   });
 
-  // Fallback de teclado para navegadores sin soporte nativo de focusgroup
   tab.addEventListener('keydown', (event) => {
     const idx = tabs.indexOf(tab);
     let nextIdx = -1;
@@ -85,7 +98,6 @@ for (const tab of tabs) {
   });
 }
 
-// Sincronización con búsqueda interna del navegador (hidden="until-found" + beforematch)
 for (const panel of panels) {
   panel.addEventListener('beforematch', () => {
     const associatedTab = document.getElementById(panel.getAttribute('aria-labelledby'));
@@ -95,7 +107,6 @@ for (const panel of panels) {
   });
 }
 
-// Eventos en los "Cuadraditos" de Categoría (Estilo ND Fotografía)
 for (const square of categorySquares) {
   square.addEventListener('click', () => {
     const targetTab = document.getElementById(square.dataset.targetTab);
@@ -103,7 +114,6 @@ for (const square of categorySquares) {
   });
 }
 
-// Enlaces del footer que saltan a una categoría específica
 for (const link of document.querySelectorAll('[data-jump-tab]')) {
   link.addEventListener('click', (event) => {
     const targetTab = document.getElementById(link.dataset.jumpTab);
@@ -114,12 +124,30 @@ for (const link of document.querySelectorAll('[data-jump-tab]')) {
   });
 }
 
+// Soporte de parámetros URL para campañas de Google Ads (ej. ?modulo=15-anos o ?modulo=bodas)
+const urlParams = new URLSearchParams(window.location.search);
+const requestedModule = urlParams.get('modulo') || window.location.hash.replace('#', '');
+const moduleMap = {
+  '15-anos': 'tab-15',
+  'bodas': 'tab-bodas',
+  'egresados': 'tab-egresos',
+  'modelaje': 'tab-modelaje',
+  'infantil': 'tab-infantil',
+  'producto': 'tab-producto'
+};
+if (requestedModule && moduleMap[requestedModule]) {
+  const initialTab = document.getElementById(moduleMap[requestedModule]);
+  if (initialTab) {
+    selectCategoryTab(initialTab, { scrollToModule: true });
+  }
+}
+
 /* ==========================================================================
-   2. WIDGET INTERACTIVO DE WHATSAPP Y CTAs CONTEXTUALES
+   2. MINI CUADRADITO PRE-WHATSAPP
    ========================================================================== */
-const waPanel = document.getElementById('wa-interactive-panel');
-const waFabToggle = document.getElementById('wa-fab-toggle');
 const waPanelClose = document.getElementById('wa-panel-close');
+const waMiniForm = document.getElementById('wa-mini-form');
+const waChips = Array.from(document.querySelectorAll('.wa-chip'));
 
 function toggleWaPanel(forceState) {
   if (!waPanel || !waFabToggle) return;
@@ -131,20 +159,27 @@ function toggleWaPanel(forceState) {
 waFabToggle?.addEventListener('click', () => toggleWaPanel());
 waPanelClose?.addEventListener('click', () => toggleWaPanel(false));
 
-// Botones de toda la página que abren el widget o redirigen con contexto
-for (const btn of document.querySelectorAll('.js-open-wa-widget')) {
-  btn.addEventListener('click', () => {
-    toggleWaPanel(true);
+for (const chip of waChips) {
+  chip.addEventListener('click', () => {
+    for (const c of waChips) c.classList.toggle('is-selected', c === chip);
+    if (chip.dataset.chipMsg) {
+      setWaPresetMessage(chip.dataset.chipMsg);
+    }
   });
 }
 
-// Opciones rápidas dentro del asistente de WhatsApp
-for (const optBtn of document.querySelectorAll('.js-wa-direct')) {
-  optBtn.addEventListener('click', () => {
-    const msg = optBtn.dataset.msg || 'Hola PIXER Producciones! Quiero hacer una consulta.';
-    window.open(buildWhatsAppUrl(msg), '_blank', 'noopener,noreferrer');
+for (const btn of document.querySelectorAll('.js-open-wa-widget')) {
+  btn.addEventListener('click', () => {
+    const preset = btn.dataset.waPreset || 'Hola! Quiero cotizar un presupuesto de 15 años en Córdoba.';
+    setWaPresetMessage(preset, { openCard: true });
   });
 }
+
+waMiniForm?.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const msg = waCustomInput?.value || 'Hola! Quiero cotizar un presupuesto de 15 años en Córdoba.';
+  window.open(buildWhatsAppUrl(msg), '_blank', 'noopener,noreferrer');
+});
 
 /* ==========================================================================
    3. MODAL NATIVO <dialog> PARA AGENDAR REUNIÓN O LLAMADA
@@ -160,10 +195,10 @@ for (const trigger of document.querySelectorAll('.js-open-meeting-modal')) {
       if (ctx.includes('15')) eventTypeSelect.value = '15 Años';
       else if (ctx.includes('Boda')) eventTypeSelect.value = 'Boda / Casamiento';
       else if (ctx.includes('Egresados')) eventTypeSelect.value = 'Egresados / Recibida';
-      else if (ctx.includes('Modelaje')) eventTypeSelect.value = 'Book de Modelaje / Personal';
+      else if (ctx.includes('Book') || ctx.includes('Modelaje')) eventTypeSelect.value = 'Book de Modelaje / Personal';
       else if (ctx.includes('Infantil')) eventTypeSelect.value = 'Infantil / Cumpleaños';
       else if (ctx.includes('Producto')) eventTypeSelect.value = 'Foto Producto / Comercial';
-      else if (ctx.includes('Presupuesto')) eventTypeSelect.value = 'Mejorar un presupuesto';
+      else if (ctx.includes('presupuesto')) eventTypeSelect.value = 'Mejorar un presupuesto';
     }
     meetingDialog?.showModal();
   });
@@ -179,14 +214,14 @@ meetingForm?.addEventListener('submit', (event) => {
 
   const message =
     `Hola PIXER Producciones! Soy ${name}. ` +
-    `Me gustaría coordinar: ${pref} para consultar por ${eventType} (${city}) y conocer cómo trabajan.`;
+    `Quiero coordinar una ${pref} para consultar por ${eventType} (${city}).`;
 
   meetingDialog?.close('confirm');
   window.open(buildWhatsAppUrl(message), '_blank', 'noopener,noreferrer');
 });
 
 /* ==========================================================================
-   4. VISOR LIGHTBOX NATIVO <dialog> PARA FOTOGRAFÍAS CURADAS
+   4. VISOR LIGHTBOX NATIVO <dialog>
    ========================================================================== */
 const lightboxDialog = document.getElementById('lightbox-dialog');
 const lightboxImg = document.getElementById('lightbox-img');
@@ -208,7 +243,6 @@ for (const photoTrigger of document.querySelectorAll('.js-open-lightbox')) {
   });
 }
 
-// Fallback de cierre al hacer clic en el backdrop para navegadores sin closedby="any"
 for (const dlg of [meetingDialog, lightboxDialog]) {
   dlg?.addEventListener('click', (event) => {
     if (event.target === dlg) {

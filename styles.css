@@ -1,6 +1,6 @@
 /* ==========================================================================
    MANUAL DE MARCA VISUAL & ARQUITECTURA CSS — PIXER PRODUCCIONES (CÓRDOBA)
-   Cumple con las guías: tabs, css-layout, performance, html de modern-web-guidance
+   Optimizado para Conversión (Google Ads CRO) y modern-web-guidance
    ========================================================================== */
 
 @property --fade-start {
@@ -18,21 +18,20 @@
 :root {
   color-scheme: dark;
 
-  /* Paleta Oficial del Manual de Marca */
-  --bg-carbon: #121213;         /* Extraído exactamente de logo_definitivo.png */
-  --bg-obsidian: #080809;       /* Lienzo profundo para protagonismo de fotografías */
+  --bg-carbon: #121213;
+  --bg-obsidian: #080809;
   --bg-surface: #17171a;
   --bg-surface-elevated: #1e1e22;
 
-  --yellow-impact: #ffd000;     /* Amarillo conversión (Top Bar Black Friday, CTAs, Gancho) */
+  --yellow-impact: #ffd000;
   --yellow-impact-hover: #ffe033;
-  --gold-pixer: #c7a75e;        /* Dorado / Ámbar original del isotipo P de PIXER */
+  --gold-pixer: #c7a75e;
   --gold-pixer-light: #debe71;
 
-  --text-white: #ffffff;        /* Texto principal de alta legibilidad sobre negro */
-  --text-silver: #d0d0d6;       /* Bajadas y descripciones */
+  --text-white: #ffffff;
+  --text-silver: #d0d0d6;
   --text-muted: #9a9aa3;
-  --text-dark: #0a0a0b;         /* Texto sobre bloques amarillos */
+  --text-dark: #0a0a0b;
 
   --border-subtle: rgba(255, 255, 255, 0.1);
   --border-gold: rgba(199, 167, 94, 0.38);
@@ -61,12 +60,6 @@ html {
   line-height: 1.6;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-}
-
 body {
   margin: 0;
   min-block-size: 100dvh;
@@ -79,6 +72,18 @@ img {
   display: block;
   max-inline-size: 100%;
   block-size: auto;
+}
+
+.sr-only {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .container {
@@ -106,7 +111,7 @@ img {
 }
 
 /* ==========================================================================
-   MÓDULO 01: BARRA SUPERIOR PROMOCIONAL (ESTILO BLACK FRIDAY)
+   MÓDULO 01: BARRA SUPERIOR PROMOCIONAL CON ANIMACIÓN HACIA LA DERECHA Y VUELTA
    ========================================================================== */
 .promo-topbar {
   background-color: var(--yellow-impact);
@@ -116,16 +121,42 @@ img {
   font-size: 0.86rem;
   position: relative;
   z-index: 60;
+  overflow: clip;
+}
+
+.promo-topbar__viewport {
+  overflow: clip;
 }
 
 .promo-topbar__inner {
   display: flex;
   flex-wrap: wrap;
-  flex-wrap: balance;
   align-items: safe center;
   justify-content: center;
   gap: 0.65rem 1rem;
   text-align: center;
+}
+
+/* Animación pedida: se mueve hacia la derecha y vuelve suavemente */
+@keyframes promo-slide-right-back {
+  0% {
+    transform: translateX(-36px);
+  }
+  50% {
+    transform: translateX(48px);
+  }
+  100% {
+    transform: translateX(-36px);
+  }
+}
+
+.promo-topbar__marquee {
+  animation: promo-slide-right-back 6.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+.promo-topbar:hover .promo-topbar__marquee {
+  animation-play-state: paused;
 }
 
 .promo-badge {
@@ -188,7 +219,7 @@ img {
   flex-wrap: wrap;
   flex-wrap: balance;
   align-items: safe center;
-  gap: 1.25rem;
+  gap: 1.15rem;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -197,7 +228,7 @@ img {
 .main-nav__list a {
   color: var(--text-white);
   text-decoration: none;
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   font-weight: 600;
   transition: color 0.2s ease;
 }
@@ -209,6 +240,15 @@ img {
 
 .main-nav__list a.nav-highlight {
   color: var(--yellow-impact);
+  font-weight: 700;
+}
+
+.main-nav__list a.nav-pill-link {
+  background-color: rgba(255, 208, 0, 0.14);
+  color: var(--yellow-impact);
+  border: 1px solid var(--border-yellow);
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
   font-weight: 700;
 }
 
@@ -225,7 +265,7 @@ img {
 }
 
 /* ==========================================================================
-   BOTONES Y PÍLDORAS (MANUAL DE MARCA)
+   BOTONES Y PÍLDORAS
    ========================================================================== */
 .btn {
   display: inline-flex;
@@ -424,7 +464,7 @@ img {
   display: block;
   font-family: var(--font-display);
   color: var(--yellow-impact);
-  font-size: 0.95rem;
+  font-size: 1rem;
   letter-spacing: 0.03em;
   margin-block-end: 0.25rem;
 }
@@ -524,7 +564,7 @@ img {
 }
 
 /* ==========================================================================
-   MÓDULO 03 Y 04: PORTFOLIO Y SUB-MÓDULOS (FONDO NEGRO + TEXTOS BLANCOS)
+   MÓDULO 03 Y 04: PORTFOLIO Y SUB-MÓDULOS (LENGUAJE UNIFICADO)
    ========================================================================== */
 .portfolio-section {
   background-color: var(--bg-obsidian);
@@ -553,7 +593,6 @@ img {
   font-size: 1rem;
 }
 
-/* Cuadraditos de Categorías (Estilo ND Fotografía con Portada de Alto Impacto) */
 .category-squares-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
@@ -635,9 +674,7 @@ img {
   color: var(--yellow-impact);
 }
 
-/* ==========================================================================
-   SISTEMA DE TABS Y PANELES (MODERN-WEB-GUIDANCE: TABS)
-   ========================================================================== */
+/* SISTEMA DE TABS Y PANELES */
 .tabs-container {
   scroll-margin-block-start: 5.5rem;
 }
@@ -676,8 +713,6 @@ img {
   color: var(--text-white);
 }
 
-/* Regla obligatoria modern-web-guidance (tabs):
-   Indicar estado activo con forma geométrica (border en ::after), no solo color ni box-shadow */
 [role="tab"][aria-selected="true"] {
   color: var(--yellow-impact);
 }
@@ -689,10 +724,6 @@ img {
   border-block-end: 3px solid var(--yellow-impact);
 }
 
-/* Regla obligatoria modern-web-guidance (tabs):
-   Los paneles con hidden="until-found" no usan display:none, por lo que NO deben
-   tener padding, border ni background en el elemento [role="tabpanel"] mismo,
-   sino en el contenedor hijo .tabpanel-inner y compartir celda de grid */
 .tabpanels-stack {
   display: grid;
   grid-template-columns: 1fr;
@@ -737,76 +768,63 @@ img {
   gap: 0.75rem;
 }
 
-/* DOBLE BLOQUE DE AUDIENCIA CON SUBGRID (MODERN-WEB-GUIDANCE: CSS-LAYOUT) */
-.audience-dual-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  grid-template-rows: auto 1fr auto;
-  gap: 1.5rem;
-  margin-block-end: 2.25rem;
-}
-
-.audience-card {
-  grid-row: span 3;
-  display: grid;
-  /* Fallback explícito en misma cascada antes de subgrid */
-  grid-template-rows: auto 1fr auto;
-  grid-template-rows: subgrid;
+/* BLOQUE INTEGRADO EN UN SOLO LENGUAJE (.unified-value-card) */
+.unified-value-card {
   background-color: var(--bg-obsidian);
   border: 1px solid var(--border-subtle);
   border-inline-start: 4px solid var(--yellow-impact);
   border-radius: var(--radius-md);
-  padding: 1.5rem;
+  padding: clamp(1.35rem, 2.5vw, 2rem);
+  margin-block-end: 2.25rem;
 }
 
-.audience-card--parents {
-  border-inline-start-color: var(--gold-pixer);
-}
-
-.audience-tag {
-  display: inline-block;
+.unified-value-card__header h4,
+.unified-value-card__header h2 {
   font-family: var(--font-display);
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  color: var(--yellow-impact);
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+  color: var(--text-white);
+  margin-block: 0 0.65rem;
+}
+
+.unified-value-card__lead {
+  color: var(--text-silver);
+  font-size: 1rem;
+  margin-block: 0 1.5rem;
+  max-inline-size: 860px;
+}
+
+.unified-value-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.unified-value-item {
+  background-color: var(--bg-surface);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+  padding: 1.15rem 1.25rem;
+}
+
+.unified-value-item strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.96rem;
+  color: var(--text-white);
   margin-block-end: 0.4rem;
 }
 
-.audience-tag--gold {
-  color: var(--gold-pixer-light);
-}
-
-.audience-card__header h4 {
-  font-family: var(--font-display);
-  font-size: 1.15rem;
-  color: var(--text-white);
-  margin-block: 0 0.75rem;
-}
-
-.audience-card__list {
+.unified-value-item p {
   margin: 0;
-  padding-inline-start: 1.15rem;
+  font-size: 0.9rem;
   color: var(--text-silver);
-  font-size: 0.94rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
 }
 
-.audience-card__list strong {
-  color: var(--text-white);
-}
-
-.audience-card__footer {
-  margin-block-start: 1.25rem;
-  padding-block-start: 0.85rem;
+.unified-value-card__footer {
+  margin-block-start: 1.4rem;
+  padding-block-start: 1rem;
   border-block-start: 1px solid var(--border-subtle);
-}
-
-.audience-highlight {
-  font-size: 0.86rem;
-  font-weight: 700;
+  font-size: 0.92rem;
   color: var(--gold-pixer-light);
 }
 
@@ -835,7 +853,8 @@ img {
   margin-block-end: 0.35rem;
 }
 
-.moment-box h5 {
+.moment-box h5,
+.moment-box h3 {
   font-family: var(--font-display);
   font-size: 1.02rem;
   margin-block: 0 0.4rem;
@@ -848,7 +867,7 @@ img {
   color: var(--text-silver);
 }
 
-/* GALERÍA CURADA VERTICAL (LIENZO NEGRO OBSIDIANA + TEXTOS EN BLANCO) */
+/* GALERÍA CURADA VERTICAL */
 .curated-gallery-block {
   background-color: var(--bg-obsidian);
   border: 1px solid var(--border-subtle);
@@ -866,7 +885,8 @@ img {
   margin-block-end: 1.25rem;
 }
 
-.curated-gallery-header h4 {
+.curated-gallery-header h4,
+.curated-gallery-header h3 {
   font-family: var(--font-display);
   font-size: 1.15rem;
   color: var(--text-white);
@@ -878,7 +898,6 @@ img {
   color: var(--gold-pixer-light);
 }
 
-/* Masonry vertical con mejora progresiva según css-layout (modern-web-guidance) */
 .photo-masonry-grid {
   columns: 3 280px;
   column-gap: 1.15rem;
@@ -937,7 +956,7 @@ img {
   border-block-start: 1px solid rgba(255, 255, 255, 0.07);
 }
 
-/* ACORDEÓN NATIVO <details> PARA MINI-FAQ DE CATEGORÍA */
+/* ACORDEÓN NATIVO <details> PARA LAS 3 FAQs POR MÓDULO */
 .category-faq__title {
   font-family: var(--font-display);
   font-size: 1.08rem;
@@ -955,7 +974,7 @@ img {
   background-color: var(--bg-obsidian);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
-  padding: 0.95rem 1.15rem;
+  padding: 1rem 1.2rem;
 }
 
 .faq-list details[open] {
@@ -977,7 +996,7 @@ img {
 }
 
 /* ==========================================================================
-   MÓDULO 05: PROCESO DE TRABAJO (CONTENT-VISIBILITY OPTIMIZATION)
+   MÓDULO 05: PROCESO DE TRABAJO
    ========================================================================== */
 .process-section {
   content-visibility: auto;
@@ -1064,7 +1083,7 @@ img {
 }
 
 /* ==========================================================================
-   MÓDULO 06: COMBOS DE COBERTURA (SUBGRID)
+   MÓDULO 06: COMBOS DE COBERTURA
    ========================================================================== */
 .combos-section {
   content-visibility: auto;
@@ -1150,7 +1169,7 @@ img {
 }
 
 /* ==========================================================================
-   MÓDULO 07: BLOQUE GANCHO COMERCIAL "MEJORAMOS CUALQUIER PRESUPUESTO"
+   MÓDULO 07: BLOQUE "MEJORAMOS CUALQUIER PRESUPUESTO"
    ========================================================================== */
 .price-match-section {
   content-visibility: auto;
@@ -1256,104 +1275,166 @@ img {
 }
 
 /* ==========================================================================
-   WIDGET INTERACTIVO DE WHATSAPP FLOTANTE
+   MINI CUADRADITO PRE-WHATSAPP FLOTANTE
    ========================================================================== */
 .wa-floating {
   position: fixed;
-  inset-block-end: 1.25rem;
-  inset-inline-end: 1.25rem;
+  inset-block-end: 1.1rem;
+  inset-inline-end: 1.1rem;
   z-index: 80;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 0.75rem;
+  gap: 0.6rem;
   contain: layout style;
 }
 
-.wa-panel {
-  inline-size: min(360px, calc(100dvw - 2.5rem));
+.wa-mini-card {
+  inline-size: min(325px, calc(100dvw - 2.2rem));
   background-color: var(--bg-carbon);
-  border: 2px solid var(--yellow-impact);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-card);
+  border: 2px solid #25d366;
+  border-radius: 14px;
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.72);
   overflow: clip;
 }
 
-.wa-panel__header {
+.wa-mini-card__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: var(--yellow-impact);
-  color: var(--text-dark);
-  padding: 0.85rem 1rem;
+  background-color: #112217;
+  border-block-end: 1px solid rgba(37, 211, 102, 0.35);
+  padding: 0.7rem 0.95rem;
 }
 
-.wa-panel__header strong {
+.wa-mini-card__agent {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.wa-status-dot {
+  inline-size: 10px;
+  block-size: 10px;
+  border-radius: 50%;
+  background-color: #25d366;
+  box-shadow: 0 0 8px #25d366;
+}
+
+.wa-mini-card__agent strong {
   display: block;
   font-family: var(--font-display);
-  font-size: 0.92rem;
+  font-size: 0.86rem;
+  color: var(--text-white);
 }
 
-.wa-panel__header span {
-  font-size: 0.76rem;
-  font-weight: 600;
+.wa-mini-card__agent span {
+  display: block;
+  font-size: 0.72rem;
+  color: #8ce9ad;
 }
 
-.wa-panel__close {
+.wa-mini-card__close {
   background: transparent;
   border: none;
-  color: var(--text-dark);
-  font-size: 1.1rem;
-  font-weight: 900;
+  color: var(--text-silver);
+  font-size: 1rem;
+  font-weight: 800;
   cursor: pointer;
 }
 
-.wa-panel__body {
-  padding: 1rem;
+.wa-mini-card__body {
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
 }
 
-.wa-greeting {
-  margin-block: 0 0.75rem;
-  font-size: 0.88rem;
+.wa-bubble-incoming {
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-white);
+  font-size: 0.82rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 0 10px 10px 10px;
+  border: 1px solid var(--border-subtle);
+}
+
+.wa-preset-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.wa-chip {
+  background-color: var(--bg-obsidian);
   color: var(--text-silver);
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
 }
 
-.wa-quick-options {
+.wa-chip:hover,
+.wa-chip.is-selected {
+  background-color: rgba(255, 208, 0, 0.18);
+  color: var(--yellow-impact);
+  border-color: var(--yellow-impact);
+}
+
+.wa-mini-form {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.wa-option-btn {
-  text-align: start;
-  background-color: var(--bg-surface);
+.wa-mini-input {
+  inline-size: 100%;
+  resize: none;
+  background-color: var(--bg-obsidian);
   color: var(--text-white);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  padding: 0.65rem 0.85rem;
+  border: 1px solid rgba(37, 211, 102, 0.45);
+  border-radius: 8px;
+  padding: 0.55rem 0.7rem;
   font-family: var(--font-sans);
-  font-size: 0.86rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
+  font-size: 0.84rem;
+  line-height: 1.4;
 }
 
-.wa-option-btn:hover {
-  border-color: var(--yellow-impact);
-  background-color: rgba(255, 208, 0, 0.1);
+.wa-mini-input:focus-visible {
+  outline: 2px solid #25d366;
+}
+
+.wa-mini-send {
+  background-color: #25d366;
+  color: #05160b;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 0.85rem;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.wa-mini-send:hover {
+  background-color: #32e274;
 }
 
 .wa-fab {
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
+  gap: 0.5rem;
   background-color: #25d366;
   color: #06140b;
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: 0.92rem;
-  padding: 0.85rem 1.25rem;
+  font-size: 0.86rem;
+  padding: 0.75rem 1.1rem;
   border: 2px solid #ffffff;
   border-radius: 999px;
   box-shadow: 0 10px 28px rgba(37, 211, 102, 0.45);
@@ -1361,7 +1442,7 @@ img {
 }
 
 /* ==========================================================================
-   MODALES NATIVOS <dialog closedby="any"> (REUNIÓN Y LIGHTBOX)
+   MODALES NATIVOS <dialog closedby="any">
    ========================================================================== */
 .native-modal,
 .lightbox-modal {
