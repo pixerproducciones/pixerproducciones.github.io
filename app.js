@@ -3,7 +3,9 @@
  */
 
 const PIXER_CONFIG = {
-  whatsappNumber: '5493510000000'
+  whatsappNumber: '5493512712104',
+  phoneDisplay: '+54 9 3512 71-2104',
+  phoneTel: '+5493512712104'
 };
 
 function buildWhatsAppUrl(message) {
