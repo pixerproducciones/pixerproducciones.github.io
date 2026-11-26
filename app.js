@@ -1,5 +1,5 @@
 /**
- * PIXER Producciones (Córdoba) — Lógica de Módulos, Mini Cuadradito Pre-WhatsApp y Google Ads Routing
+ * PIXER Producciones — Lógica de Módulos, Mini Cuadradito Pre-WhatsApp y Google Ads Routing
  */
 
 const PIXER_CONFIG = {
@@ -172,14 +172,14 @@ for (const chip of waChips) {
 
 for (const btn of document.querySelectorAll('.js-open-wa-widget')) {
   btn.addEventListener('click', () => {
-    const preset = btn.dataset.waPreset || 'Hola! Quiero cotizar un presupuesto de 15 años en Córdoba.';
+    const preset = btn.dataset.waPreset || 'Hola! Quiero cotizar un presupuesto de 15 años.';
     setWaPresetMessage(preset, { openCard: true });
   });
 }
 
 waMiniForm?.addEventListener('submit', (event) => {
   event.preventDefault();
-  const msg = waCustomInput?.value || 'Hola! Quiero cotizar un presupuesto de 15 años en Córdoba.';
+  const msg = waCustomInput?.value || 'Hola! Quiero cotizar un presupuesto de 15 años.';
   window.open(buildWhatsAppUrl(msg), '_blank', 'noopener,noreferrer');
 });
 
@@ -211,7 +211,7 @@ meetingForm?.addEventListener('submit', (event) => {
   const formData = new FormData(meetingForm);
   const name = formData.get('name') || '';
   const eventType = formData.get('eventType') || '';
-  const city = formData.get('city') || 'Córdoba';
+  const city = formData.get('city') || 'Consultar fecha';
   const pref = formData.get('pref') || 'Llamada por WhatsApp';
 
   const message =

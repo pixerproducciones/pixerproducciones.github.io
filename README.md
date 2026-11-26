@@ -1,6 +1,6 @@
-# PIXER Producciones — Sitio Web Oficial y Portfolio (Córdoba)
+# PIXER Producciones — Sitio Web Oficial y Portfolio
 
-Sitio web de fotografía y producción audiovisual con cobertura en toda la provincia de Córdoba, combinando estética de **portfolio profesional** con estructura de **landing page de alta conversión para Google Ads**.
+Sitio web de fotografía y producción audiovisual con Fotografía y Video Profesional para Eventos, combinando estética de **portfolio profesional** con estructura de **landing page de alta conversión para Google Ads**.
 
 ## Estructura de Módulos
 1. **Barra Superior Promocional (*Top Bar* estilo Black Friday)**: Espacio preparado para medios de pago (*"Hasta 6 cuotas sin interés"*), cobertura provincial y gancho comercial.
